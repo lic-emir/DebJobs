@@ -10,8 +10,15 @@
   "author": "Emir Ponce",
   "license": "ISC",
   "dependencies": {
+    "connect-mongo": "^6.0.0",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^17.4.2",
     "express": "^5.2.1",
-    "express-handlebars": "^8.0.3"
+    "express-handlebars": "^8.0.3",
+    "express-session": "^1.19.0",
+    "mongoose": "^9.8.1",
+    "shortid": "^2.2.17",
+    "slug": "^12.0.1"
   },
   "devDependencies": {
     "nodemon": "^3.1.14"
