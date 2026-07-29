@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 const path = require('path');
+require('../models/Vacantes');
+
 
 require('dotenv').config({ path: path.resolve(__dirname, '../variables.env') });
 
@@ -12,3 +14,4 @@ mongoose.connect(process.env.DATA_BASE)
 mongoose.connection.on('error', (error) => {
   console.error('MongoDB connection error:', error);
 });
+
