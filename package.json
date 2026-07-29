@@ -5,11 +5,14 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon ./index"
+    "dev": "nodemon ./index",
+    "watch": "webpack --watch --mode development",
+    "start": "concurrently \"npm run dev\" \"npm run watch\""
   },
   "author": "Emir Ponce",
   "license": "ISC",
   "dependencies": {
+    "concurrently": "^10.0.4",
     "connect-mongo": "^6.0.0",
     "cookie-parser": "^1.4.7",
     "dotenv": "^17.4.2",
@@ -21,6 +24,11 @@
     "slug": "^12.0.1"
   },
   "devDependencies": {
-    "nodemon": "^3.1.14"
+    "@babel/core": "^7.29.7",
+    "@babel/preset-env": "^7.29.7",
+    "babel-loader": "^10.1.1",
+    "nodemon": "^3.1.14",
+    "webpack": "^5.109.2",
+    "webpack-cli": "^7.2.2"
   }
 }
