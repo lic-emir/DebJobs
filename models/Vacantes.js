@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
-const slug = require('slug');
+const slug = require('slugify');
 const shortid = require('shortid');
 
 const vacantesSchema = new mongoose.Schema({
@@ -42,10 +42,11 @@ const vacantesSchema = new mongoose.Schema({
     cv: String
   }]
 });
-vacantesSchema.pre('save', function(next){
-  const url = slug(this.titulo);
-  this.url = `${url}-${shortid.generate()}`
-  next();
+vacantesSchema.pre('save', async function(){
+  if (this.isModified('titulo') || this.isNew) {
+    const url = slug(this.titulo);
+    this.url = `${url}-${shortid.generate()}`;
+  }
 });
 
 module.exports = mongoose.model('Vacante', vacantesSchema)

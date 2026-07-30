@@ -7,11 +7,17 @@ const router = require('./routes');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const MongoStore = require('connect-mongo').MongoStore;
+const bodyParser = require('body-parser');
+
 
 require('dotenv').config({ path: path.resolve(__dirname, 'variables.env') });
 require('./config/db');
 
 const app = express();
+
+//habilitar body-parser
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended:true}));
 
 //habilitar handlebar como template engine
 app.engine('handlebars',
