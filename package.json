@@ -12,6 +12,7 @@
   "author": "Emir Ponce",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "concurrently": "^10.0.4",
     "connect-mongo": "^6.0.0",
     "cookie-parser": "^1.4.7",

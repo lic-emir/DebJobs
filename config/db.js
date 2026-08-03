@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const path = require('path');
 require('../models/Vacantes');
+require('../models/Usuarios');
 
 
 require('dotenv').config({ path: path.resolve(__dirname, '../variables.env') });
