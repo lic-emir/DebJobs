@@ -21,7 +21,7 @@ const usuariosSchema = new mongoose.Schema({
   token: String,
   expira: Date
 });
-usuariosSchema.pre('save', async function(next) {
+usuariosSchema.pre('save', async function() {
   if (!this.isModified('password')) {
     return;
   }
