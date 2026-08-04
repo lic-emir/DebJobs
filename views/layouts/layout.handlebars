@@ -35,6 +35,11 @@
     {{/if}}
   </header>
   <div class="contenido-principal contenedor">
+    {{#if mensajes}}
+      <div class="alertas">
+        {{{mostrarAlertas mensajes}}}
+      </div>
+    {{/if}}
     {{{body}}}
   </div>
   <script src="/dist/bundle.js"></script>
