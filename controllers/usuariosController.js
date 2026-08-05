@@ -16,8 +16,17 @@ exports.validarUsuario = [
     .escape(),
   body('email')
     .isEmail().withMessage('El email debe ser válido')
-    .normalizeEmail()
-    .trim(),
+    .normalizeEmail({
+      gmail_remove_dots: false,
+      gmail_remove_subaddress: false
+    })
+    .trim()
+    .custom(async (email) => {
+      const existeUsuario = await Usuarios.findOne({email});
+      if (existeUsuario) {
+        throw new Error('El correo electrónico ya esta registrado')
+      }
+    }),
   body('password')
     .notEmpty().withMessage('El password no puede ir vacío')
     .isLength({ min: 6 }).withMessage('El password debe tener al menos 6 caracteres')
@@ -57,6 +66,16 @@ exports.validarUsuario = [
 ];
 exports.crearUsuario = async (req, res, next) => {
   const usuario = new Usuarios(req.body);
+  const errores = validationResult(req)
+
+  if (!errores.isEmpty()) {
+    return res.render('crear-cuenta', {
+      nombrePagina: 'Crea tu cuenta en DevJobs',
+      tagline: 'Comienza a publicar tus vacantes gratis, solo debes crear una cuenta',
+      mensajes: errores.array().map(err => err.msg),
+      formData: req.body
+    })
+  }
 
   try {
     const nuevoUsuario = await usuario.save();
