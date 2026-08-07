@@ -1,0 +1,29 @@
+const passport = require('passport');
+//opciones automáticas de passport, para pasar mensajes se necesita connect-flash
+/*exports.autenticarUsuario = passport.authenticate('local', {
+  successRedirect: '/administracion',
+  failureRedirect: '/iniciar-sesision'
+})*/
+exports.autenticarUsuario = (req, res, next) => {
+  //custom callback, control absoluto sobre qué hacer cuando la autenticación falla o tiene éxito. No necesita connect-flash
+  passport.authenticate('local', (err, usuario, info) => {
+    // Si ocurre un error de servidor o base de datos
+    if (err) return next(err);
+
+    // Si la autenticación falla (usuario no existe o password incorrecto)
+    if (!usuario) {
+      return res.render('iniciar-sesion', {
+        nombrePagina: 'Iniciar Sesión en devJobs',
+        mensajes: {
+          error: [info.message] // El mensaje proviene del done(null, false, {message: '...'})
+        }
+      });
+    }
+
+    // Si las credenciales son correctas, iniciar sesión e ir a la ruta protegida
+    req.login(usuario, (err) => {
+      if (err) return next(err);
+      return res.redirect('/administracion');
+    });
+  })(req, res, next);
+};

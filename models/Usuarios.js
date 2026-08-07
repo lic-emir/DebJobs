@@ -29,4 +29,10 @@ usuariosSchema.pre('save', async function() {
   this.password = hash;
 })
 
+//autenticar usuario
+usuariosSchema.methods = {
+  compararPassword: function(password){
+    return bcrypt.compareSync(password, this.password);
+  }
+}
 module.exports = mongoose.model('Usuarios', usuariosSchema)

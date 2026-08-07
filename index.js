@@ -8,6 +8,7 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const MongoStore = require('connect-mongo').MongoStore;
 const bodyParser = require('body-parser');
+const passport = require('./config/passport');
 
 
 require('dotenv').config({ path: path.resolve(__dirname, 'variables.env') });
@@ -39,6 +40,10 @@ app.use(session({
   saveUninitialized: false,
   store: MongoStore.create({ mongoUrl: process.env.DATA_BASE })
 }))
+
+//inicializar passport
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use('/', router());
 
