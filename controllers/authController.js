@@ -27,6 +27,12 @@ exports.autenticarUsuario = (req, res, next) => {
     });
   })(req, res, next);
 };
+exports.verificarUsuario = (req, res, next) => {
+  if (req.isAuthenticated()) {
+    return next()
+  }
+  res.redirect('/iniciar-sesion')
+}
 exports.mostrarPanel = (req, res) => {
   res.render('administracion', {
     nombrePagina: 'Panel de Administración',
