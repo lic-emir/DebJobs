@@ -27,3 +27,9 @@ exports.autenticarUsuario = (req, res, next) => {
     });
   })(req, res, next);
 };
+exports.mostrarPanel = (req, res) => {
+  res.render('administracion', {
+    nombrePagina: 'Panel de Administración',
+    tagline: 'Crea y Administra tus vacantes desde aquí'
+  })
+}
