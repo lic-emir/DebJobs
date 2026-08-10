@@ -89,3 +89,36 @@ exports.formIniciarSesion = (req, res) => {
     nombrePagina: 'Iniciar Sesión DevJobs'
   })
 }
+exports.formEditarPerfil = (req, res) => {
+  res.render('editar-perfil', {
+    nombrePagina: 'Edita tu pefil en DevJobs',
+    usuario: req.user.toObject()
+  });
+}
+exports.editarPerfil = async (req, res, next) => {
+  try {
+    const usuario = await Usuarios.findById(req.user._id);
+    const passViejo = usuario.compararPassword(req.body.password);
+    if (!passViejo) {
+      return res.render('editar-perfil', {
+        nombrePagina: 'Edita tu perfil en DevJobs',
+        usuario: req.user.toObject(), // Importante: volver a pasar el usuario para que la vista no pierda sus datos
+        mensajes: {
+          error: ['La contraseña actual es incorrecta'] // <-- Debe ser un objeto con array
+        }
+      });
+    }
+    usuario.nombre = req.body.nombre;
+    usuario.email = req.body.email;
+    if (req.body['nuevo-password'] && req.body['nuevo-password'].trim() !== '') {
+        usuario.password = req.body['nuevo-password'];
+    }
+    await usuario.save();
+    req.session.mensajes = {
+      correcto: ['Cambios guardados correctamente']
+    }
+    res.redirect('/administracion');
+  } catch (error) {
+    return next(error);
+  }
+}

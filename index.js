@@ -40,6 +40,15 @@ app.use(session({
   saveUninitialized: false,
   store: MongoStore.create({ mongoUrl: process.env.DATA_BASE })
 }))
+app.use((req, res, next) => {
+  // Asignamos res.locals.mensajes desde la sesión si existe
+  res.locals.mensajes = req.session.mensajes;
+  
+  // Eliminamos el mensaje de la sesión para que solo se muestre una vez (al recargar desaparece)
+  delete req.session.mensajes;
+  
+  next();
+});
 
 //inicializar passport
 app.use(passport.initialize());
