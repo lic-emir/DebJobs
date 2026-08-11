@@ -46,3 +46,14 @@ exports.mostrarPanel = async (req, res) => {
     vacantes
   })
 }
+exports.cerrarSesion = (req, res, next) => {
+  req.logout(function(err){
+    if(err){
+      return next(err)
+    }
+    req.session.mensajes = {
+      correcto: ['Cerraste sesión correctamente']
+    }
+    return res.redirect('/iniciar-sesion')
+  });
+}
