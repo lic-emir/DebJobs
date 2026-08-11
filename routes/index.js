@@ -19,6 +19,6 @@ module.exports = () => {
   router.get('/cerrar-sesion', authController.verificarUsuario, authController.cerrarSesion)
   router.get('/administracion', authController.verificarUsuario, authController.mostrarPanel);
   router.get('/editar-perfil', authController.verificarUsuario, usuariosController.formEditarPerfil);
-  router.post('/editar-perfil', authController.verificarUsuario, usuariosController.editarPerfil);
+  router.post('/editar-perfil', authController.verificarUsuario, usuariosController.validarPerfil, usuariosController.editarPerfil);
   return router;
 }

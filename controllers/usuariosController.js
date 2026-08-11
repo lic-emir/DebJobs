@@ -124,3 +124,41 @@ exports.editarPerfil = async (req, res, next) => {
     return next(error);
   }
 }
+exports.validarPerfil = [
+  body('nombre')
+    .notEmpty().withMessage('El nombre no puede ir vacío')
+    .trim()
+    .escape(),
+  body('email')
+    .isEmail().withMessage('El correo debe ser un email válido')
+    .normalizeEmail({
+      gmail_remove_dots: false,
+      gmail_remove_subaddress: false
+    })
+    .trim(),
+  body('password')
+    .notEmpty().withMessage('El password actual es obligatorio para guardar cambios'),
+  body('nuevo-password')
+    .optional({ checkFalsy: true }) // Solo valida si el campo no está vacío
+    .isLength({ min: 6 }).withMessage('El nuevo password debe tener al menos 6 caracteres'),
+
+  (req, res, next) => {
+    const errores = validationResult(req);
+
+    if (!errores.isEmpty()) {
+      return res.render('editar-perfil', {
+        nombrePagina: 'Edita tu perfil en DevJobs',
+        // Mezclamos req.user con req.body para conservar el texto modificado en los inputs
+        usuario: { ...req.user.toObject(), ...req.body }, 
+        cerrarSesion: true,
+        nombre: req.user.nombre,
+        mensajes: {
+          error: errores.array().map(e => e.msg)
+        }
+      });
+    }
+
+    // Avanza al middleware editarPerfil si la validación fue exitosa
+    next(); 
+  }
+];
