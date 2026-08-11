@@ -3,19 +3,19 @@
     <h3>Información General</h3>
     <div class="campo">
       <label for="titulo">Titulo</label>
-      <input type="text" name="titulo" id="titulo" placeholder="Ej: React Developer" required>
+      <input type="text" name="titulo" id="titulo" placeholder="Ej: React Developer" value="{{vacante.titulo}}">
     </div>
     <div class="campo">
       <label for="empresa">Empresa</label>
-      <input type="text" name="empresa" id="empresa" placeholder="Empresa Contrata" required>
+      <input type="text" name="empresa" id="empresa" placeholder="Empresa Contrata" value="{{vacante.empresa}}">
     </div>
     <div class="campo">
       <label for="ubicacion">Ubicación</label>
-      <input type="text" name="ubicacion" id="ubicacion" placeholder="Ej: Argentina o Remoto" required>
+      <input type="text" name="ubicacion" id="ubicacion" placeholder="Ej: Argentina o Remoto" value="{{vacante.ubicacion}}">
     </div>
     <div class="campo">
       <label for="salario">Salario (USD)</label>
-      <input type="text" name="salario" id="salario" placeholder="Ej: $500 USD" required>
+      <input type="text" name="salario" id="salario" placeholder="Ej: $500 USD" value="{{vacante.salario}}">
     </div>
     <div class="campo">
       <label for="contrato">Contrato</label>
@@ -35,7 +35,7 @@
     </div>
     <h3>Conocimientos</h3>
     <ul class="lista-conocimientos">
-      {{#seleccionarSkills x}}
+      {{#seleccionarSkills vacante.skills}}
       {{/seleccionarSkills}}
     </ul>
     <div class="campo centrar-horizontal">

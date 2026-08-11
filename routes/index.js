@@ -8,10 +8,10 @@ const authController = require('../controllers/authController')
 module.exports = () => {
   router.get('/', homeController.mostrarTrabajos);
   router.get('/vacantes/nueva', authController.verificarUsuario, vacantesController.formularioNuevaVacante);
-  router.post('/vacantes/nueva', authController.verificarUsuario, vacantesController.agregarVacante);
+  router.post('/vacantes/nueva', authController.verificarUsuario, vacantesController.validarVacante,vacantesController.agregarVacante);
   router.get('/vacantes/:url', vacantesController.mostrarVacante);
   router.get('/vacantes/editar/:url', authController.verificarUsuario, vacantesController.formEditarVacante);
-  router.post('/vacantes/editar/:url', authController.verificarUsuario, vacantesController.editarVacante);
+  router.post('/vacantes/editar/:url', authController.verificarUsuario, vacantesController.validarVacante, vacantesController.editarVacante);
   router.get('/crear-cuenta', usuariosController.formCrearCuenta);
   router.post('/crear-cuenta', usuariosController.validarUsuario, usuariosController.crearUsuario);
   router.get('/iniciar-sesion', usuariosController.formIniciarSesion);
