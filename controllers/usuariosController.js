@@ -92,6 +92,8 @@ exports.formIniciarSesion = (req, res) => {
 exports.formEditarPerfil = (req, res) => {
   res.render('editar-perfil', {
     nombrePagina: 'Edita tu pefil en DevJobs',
+    cerrarSesion: true,
+    nombre: req.user.nombre,
     usuario: req.user.toObject()
   });
 }
