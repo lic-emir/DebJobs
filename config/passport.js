@@ -10,7 +10,7 @@ passport.use(new LocalStrategy({
   async (email, password, done) => {
     const usuario = await Usuarios.findOne({email});
     if(!usuario) return done(null, false, {message: 'Usuario no existe'})
-    const verificarPass = usuario.compararPassword(password);
+    const verificarPass = await usuario.compararPassword(password);
     if(!verificarPass) return done(null, false, {message: 'Password incorrecto'})
     
     return done(null, usuario)
