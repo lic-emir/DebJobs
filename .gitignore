@@ -2,3 +2,8 @@
 node_modules/
 public/dist/
 variables.env
+# Ignorar todos los archivos dentro de la carpeta uploads
+public/uploads/**/*
+
+# Excepto los archivos .gitkeep para mantener la estructura de directorios en Git
+!public/uploads/**/.gitkeep
