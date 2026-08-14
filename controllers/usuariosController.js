@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const Usuarios = mongoose.model('Usuarios');
 const { body, validationResult } = require('express-validator');
+const multer = require('multer');
+const shortid = require('shortid');
 
 exports.formCrearCuenta = (req, res) => {
   res.render('crear-cuenta', {
@@ -100,7 +102,7 @@ exports.formEditarPerfil = (req, res) => {
 exports.editarPerfil = async (req, res, next) => {
   try {
     const usuario = await Usuarios.findById(req.user._id);
-    const passViejo = usuario.compararPassword(req.body.password);
+    const passViejo = await usuario.compararPassword(req.body.password);
     if (!passViejo) {
       return res.render('editar-perfil', {
         nombrePagina: 'Edita tu perfil en DevJobs',
@@ -114,6 +116,9 @@ exports.editarPerfil = async (req, res, next) => {
     usuario.email = req.body.email;
     if (req.body['nuevo-password'] && req.body['nuevo-password'].trim() !== '') {
         usuario.password = req.body['nuevo-password'];
+    }
+    if (req.file) {
+      usuario.imagen = req.file.filename;
     }
     await usuario.save();
     req.session.mensajes = {
@@ -162,3 +167,50 @@ exports.validarPerfil = [
     next(); 
   }
 ];
+
+const configMulter = {
+  limits: {fileSize: 1000000},
+  storage: fileStorage = multer.diskStorage({
+    destination: (req, file, cb) => {
+      cb(null, __dirname+'../../public/uploads/perfiles')
+    },
+    filename: (req, file, cb) =>{
+      const extension = file.mimetype.split('/')[1];
+      cb(null, `${shortid.generate()}.${extension}`);
+    }
+  }),
+  fileFilter(req, file, cb){
+    if(file.mimetype === 'image/jpeg' || file.mimetype === 'image/png'){
+      cb(null, true);
+    }else{
+      cb(new Error('Formato no válido'), false);
+    }
+  }
+}
+const upload = multer(configMulter).single('imagen');
+
+exports.subirImagen = (req, res, next) => {
+  upload(req, res, function(error){
+    if (error) {
+      if (error instanceof multer.MulterError) {
+        if (error.code === 'LIMIT_FILE_SIZE') {
+          req.session.mensajes = {
+            error: ['El archivo es muy grande: Max 1MB']
+          }
+        }else{
+          req.session.mensajes = {
+            error: [error.message]
+          }
+        }
+      }else{
+        req.session.mensajes = {
+          error: [error.message]
+        }
+      }
+      res.redirect('/administracion');
+      return;
+    }else{
+      return next();
+    }
+  });
+}
