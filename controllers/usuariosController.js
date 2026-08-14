@@ -96,7 +96,8 @@ exports.formEditarPerfil = (req, res) => {
     nombrePagina: 'Edita tu pefil en DevJobs',
     cerrarSesion: true,
     nombre: req.user.nombre,
-    usuario: req.user.toObject()
+    usuario: req.user.toObject(),
+    imagen: req.user.imagen
   });
 }
 exports.editarPerfil = async (req, res, next) => {
@@ -157,6 +158,7 @@ exports.validarPerfil = [
         usuario: { ...req.user.toObject(), ...req.body }, 
         cerrarSesion: true,
         nombre: req.user.nombre,
+        imagen: req.user.imagen,
         mensajes: {
           error: errores.array().map(e => e.msg)
         }

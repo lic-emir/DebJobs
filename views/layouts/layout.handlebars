@@ -28,6 +28,9 @@
     {{#if cerrarSesion}}
       <div class="cerrar-sesion">
         <p>¡Hola! {{nombre}}</p>
+        {{#if imagen}}
+          <img src="/uploads/perfiles/{{imagen}}" class="admin-perfil" alt="imágen de perfil del reclutador">
+        {{/if}}
         <a href="/administracion">Administración</a>
         <a href="/cerrar-sesion">Cerrar Sesión</a>
       </div>
