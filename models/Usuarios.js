@@ -19,7 +19,8 @@ const usuariosSchema = new mongoose.Schema({
     trim: true
   },
   token: String,
-  expira: Date
+  expira: Date,
+  imagen: String
 });
 usuariosSchema.pre('save', async function() {
   if (!this.isModified('password')) {
@@ -32,7 +33,7 @@ usuariosSchema.pre('save', async function() {
 //autenticar usuario
 usuariosSchema.methods = {
   compararPassword: function(password){
-    return bcrypt.compareSync(password, this.password);
+    return bcrypt.compare(password, this.password);
   }
 }
 module.exports = mongoose.model('Usuarios', usuariosSchema)
