@@ -21,8 +21,8 @@ exports.agregarVacante = async (req, res) => {
   res.redirect(`/vacantes/${nuevaVacante.url}`)
 }
 exports.mostrarVacante = async (req, res, next) => {
-  const vacante = await Vacante.findOne({url: req.params.url}).lean();
-
+  const vacante = await Vacante.findOne({url: req.params.url}).populate('autor', 'nombre email imagen').lean();
+  
   if(!vacante) return next();
 
   res.render('vacante', {
