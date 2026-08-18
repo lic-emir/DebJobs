@@ -1,6 +1,8 @@
 const passport = require('passport');
 const mongoose = require('mongoose');
 const Vacante = mongoose.model('Vacante');
+const Usuarios = mongoose.model('Usuarios');
+const crypto = require('crypto');
 //opciones automáticas de passport, para pasar mensajes se necesita connect-flash
 /*exports.autenticarUsuario = passport.authenticate('local', {
   successRedirect: '/administracion',
@@ -63,4 +65,24 @@ exports.formReestablecerPassword = (req, res) => {
     nombrePagina: 'Reestablece tu password',
     tagline: 'Si ya tienes una cuenta pero olvidaste tu password, coloca tu email'
   });
+}
+exports.enviarToken = async (req, res) => {
+  const usuario = await Usuarios.findOne({email: req.body.email});
+
+  if (!usuario) {
+    req.session.mensajes = {
+      error: ['No existe esa cuenta']
+    }
+    return res.redirect('/iniciar-sesion');
+  }
+
+  usuario.token = crypto.randomBytes(20).toString('hex');
+  usuario.expira = Date.now() + 3600000;
+
+  await usuario.save();
+  const resetUrl = `http://${req.headers.host}/reestablecer-password/${usuario.token}`;
+  req.session.mensajes = {
+    correcto: ['Revisa tu email y sigue las instrucciones']
+  }
+  res.redirect('/iniciar-sesion');
 }
