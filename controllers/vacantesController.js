@@ -196,3 +196,18 @@ exports.contactar = async(req, res, next)=>{
   }
   res.redirect('/');
 }
+exports.mostrarCandidatos = async (req, res, next) => {
+  const vacante = await Vacante.findById(req.params.id).lean();
+  
+  if(!vacante) return next();
+  
+  if(vacante.autor != req.user._id.toString()) return next();
+
+  res.render('candidatos', {
+    nombrePagina: `Candidatos Vacante - ${vacante.titulo}`,
+    cerrarSesion: true,
+    nombre: req.user.nombre,
+    imagen: req.user.imagen,
+    candidatos: vacante.candidatos
+  });
+}
