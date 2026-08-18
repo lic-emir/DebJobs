@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const Vacante = mongoose.model('Vacante');
 const { body, validationResult } = require('express-validator');
+const multer = require('multer');
+const shortid = require('shortid');
 
 exports.formularioNuevaVacante = (req, res) => {
   res.render('nueva-vacante', {
@@ -128,4 +130,69 @@ const verificarAutor = (vacante = {}, usuario = {}) => {
     return false;
   }
   return true;
+}
+
+const configMulter = {
+  limits: {fileSize: 500000},
+  storage: multer.diskStorage({
+    destination: (req, file, cb) => {
+      cb(null, __dirname+'../../public/uploads/cv')
+    },
+    filename: (req, file, cb) =>{
+      const extension = file.mimetype.split('/')[1];
+      cb(null, `${shortid.generate()}.${extension}`);
+    }
+  }),
+  fileFilter(req, file, cb){
+    if(file.mimetype === 'application/pdf'){
+      cb(null, true);
+    }else{
+      cb(new Error('Formato no válido'), false);
+    }
+  }
+}
+const upload = multer(configMulter).single('cv');
+exports.subirCV = (req, res, next) => {
+  upload(req, res, function(error){
+    if (error) {
+      if (error instanceof multer.MulterError) {
+        if (error.code === 'LIMIT_FILE_SIZE') {
+          req.session.mensajes = {
+            error: ['El archivo es muy grande: Max 500KB']
+          }
+        }else{
+          req.session.mensajes = {
+            error: [error.message]
+          }
+        }
+      }else{
+        req.session.mensajes = {
+          error: [error.message]
+        }
+      }
+      const destino = req.get('Referer') || `/vacantes/${req.params.url}`;
+      res.redirect(destino);
+      return;
+    }else{
+      return next();
+    }
+  });
+}
+exports.contactar = async(req, res, next)=>{
+  const vacante = await Vacante.findOne({url: req.params.url});
+
+  if(!vacante) return next();
+
+  const nuevoCandidato = {
+    nombre: req.body.nombre,
+    email: req.body.email,
+    cv: req.file.filename
+  }
+  vacante.candidatos.push(nuevoCandidato);
+  await vacante.save();
+
+  req.session.mensajes = {
+    correcto: ['Tu CV se envió correctamente']
+  }
+  res.redirect('/');
 }
