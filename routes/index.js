@@ -19,6 +19,7 @@ module.exports = () => {
   router.post('/iniciar-sesion', authController.autenticarUsuario);
   router.get('/cerrar-sesion', authController.verificarUsuario, authController.cerrarSesion);
   router.get('/reestablecer-password', authController.formReestablecerPassword);
+  router.post('/reestablecer-password', authController.enviarToken);
   router.get('/administracion', authController.verificarUsuario, authController.mostrarPanel);
   router.get('/editar-perfil', authController.verificarUsuario, usuariosController.formEditarPerfil);
   router.post('/editar-perfil', authController.verificarUsuario, usuariosController.subirImagen, usuariosController.validarPerfil, usuariosController.editarPerfil);
