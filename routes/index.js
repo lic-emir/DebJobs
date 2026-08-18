@@ -22,5 +22,6 @@ module.exports = () => {
   router.get('/editar-perfil', authController.verificarUsuario, usuariosController.formEditarPerfil);
   router.post('/editar-perfil', authController.verificarUsuario, usuariosController.subirImagen, usuariosController.validarPerfil, usuariosController.editarPerfil);
   router.post('/vacantes/:url', vacantesController.subirCV, vacantesController.contactar);
+  router.get('/candidatos/:id', authController.verificarUsuario, vacantesController.mostrarCandidatos)
   return router;
 }
