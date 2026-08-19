@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const Vacante = mongoose.model('Vacante');
 const Usuarios = mongoose.model('Usuarios');
 const crypto = require('crypto');
+const enviarEmail = require('../handlers/email')
 //opciones automáticas de passport, para pasar mensajes se necesita connect-flash
 /*exports.autenticarUsuario = passport.authenticate('local', {
   successRedirect: '/administracion',
@@ -81,6 +82,12 @@ exports.enviarToken = async (req, res) => {
 
   await usuario.save();
   const resetUrl = `http://${req.headers.host}/reestablecer-password/${usuario.token}`;
+  await enviarEmail.enviar({
+    usuario,
+    subject: 'Password Reset',
+    resetUrl,
+    archivo: 'reset'
+  });
   req.session.mensajes = {
     correcto: ['Revisa tu email y sigue las instrucciones']
   }
